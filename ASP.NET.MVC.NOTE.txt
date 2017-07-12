@@ -1,7 +1,7 @@
-http://localhost:51223/Home/Index
+ï»¿http://localhost:51223/Home/Index
 
-Home 	: HomeController ¸¦ ÀÇ¹Ì
-Index 	: Index ÇÔ¼ö¸¦ ÀÇ¹Ì
+Home 	: HomeController ë¥¼ ì˜ë¯¸
+Index 	: Index í•¨ìˆ˜ë¥¼ ì˜ë¯¸
 
 ----------------------------------------------------
 
@@ -10,8 +10,8 @@ public string Hello()
 	return "Hello HomeController::Hello";
 }
 
-ÀÌ ÇÔ¼ö¸¦ HelloController ¿¡ Ãß°¡ÇÏ°Ô µÇ¸é
-¹®ÀÚ¿­ÀÌ Response ·Î ¸®ÅÏµÇ°Ô µÈ´Ù.
+ì´ í•¨ìˆ˜ë¥¼ HelloController ì— ì¶”ê°€í•˜ê²Œ ë˜ë©´
+ë¬¸ìžì—´ì´ Response ë¡œ ë¦¬í„´ë˜ê²Œ ëœë‹¤.
 
 ----------------------------------------------------
 http://localhost:51223/Home/Hello3/10102
@@ -29,9 +29,9 @@ public string Hello2(int? id)
 		
 http://localhost:51223/Home/Hello3/10102?param=apple
 
-id ´Â URL ¿¡ Ãß°¡ÇÏ°í
-±× ÀÌ¿ÜÀÇ ¸Å°³º¯¼ö´Â QuertyString ÇüÅÂ·Î ÁÖ´Âµ¥
-ÀÌ°ÍÀ» ¸Å°³º¯¼ö ÀÌ¸§¿¡ Å° °ªÀ» ¶È °°ÀÌ ÁØ´Ù.
+id ëŠ” URL ì— ì¶”ê°€í•˜ê³ 
+ê·¸ ì´ì™¸ì˜ ë§¤ê°œë³€ìˆ˜ëŠ” QuertyString í˜•íƒœë¡œ ì£¼ëŠ”ë°
+ì´ê²ƒì„ ë§¤ê°œë³€ìˆ˜ ì´ë¦„ì— í‚¤ ê°’ì„ ë˜‘ ê°™ì´ ì¤€ë‹¤.
 
 public string Hello3(int? id, string param)
 {
@@ -52,7 +52,7 @@ public string Hello3(int? id, string param)
 		result = result + "param = " + param;
 	}
 	
-	//	ÄíÅ° »©°¡´Â °É ¹æÁöÇÏ±â À§ÇØ ÅÂ±×°ªÀ» ¹Ù²ã ÁØ´Ù.
+	//	ì¿ í‚¤ ë¹¼ê°€ëŠ” ê±¸ ë°©ì§€í•˜ê¸° ìœ„í•´ íƒœê·¸ê°’ì„ ë°”ê¿” ì¤€ë‹¤.
 	return HttpUtility.HtmlEncode(result);
 }
 
@@ -66,12 +66,12 @@ public string Hello3(int? id, string param)
         }
     }
  
-	TestView ÇÔ¼ö¿¡ ¸¶¿ì½º °¡Á®´Ù ´ë°í AddView ÇØ ÁØ´Ù.
-	±×·¯¸é Views ¾Æ·¡ Test2 Æú´õ¿¡ TestView ÆÄÀÏÀÌ »ý±ä´Ù.
+	TestView í•¨ìˆ˜ì— ë§ˆìš°ìŠ¤ ê°€ì ¸ë‹¤ ëŒ€ê³  AddView í•´ ì¤€ë‹¤.
+	ê·¸ëŸ¬ë©´ Views ì•„ëž˜ Test2 í´ë”ì— TestView íŒŒì¼ì´ ìƒê¸´ë‹¤.
 	
-	Áï ÇÏ³ªÀÇ ÇÔ¼ö¿¡ ÇØ´çÇÏ´Â View °¡ ÀÌ¸§À» °¡Áö°í Ã£¾Æ¼­ È£ÃâµÈ´Ù.
-	Spring °°Àº °æ¿ì¿¡´Â ³»°¡ ÀÌ¸§À» ÁöÁ¤ÇÏ´Âµ¥ ¿©±â´Â ÀÌ¸§À» ÇÔºÎ·Î ¸ø ºÙÀÎ´Ù.
-	ÀÌ°Ô ÀåÁ¡ÀÌ µÉ ¼ö ÀÖ´Ù.
+	ì¦‰ í•˜ë‚˜ì˜ í•¨ìˆ˜ì— í•´ë‹¹í•˜ëŠ” View ê°€ ì´ë¦„ì„ ê°€ì§€ê³  ì°¾ì•„ì„œ í˜¸ì¶œëœë‹¤.
+	Spring ê°™ì€ ê²½ìš°ì—ëŠ” ë‚´ê°€ ì´ë¦„ì„ ì§€ì •í•˜ëŠ”ë° ì—¬ê¸°ëŠ” ì´ë¦„ì„ í•¨ë¶€ë¡œ ëª» ë¶™ì¸ë‹¤.
+	ì´ê²Œ ìž¥ì ì´ ë  ìˆ˜ ìžˆë‹¤.
 	
 	
 <%@ Page Title="" Language="C#" 
@@ -93,11 +93,11 @@ public string Hello3(int? id, string param)
 		return View();
 	}
 	
-	ViewData ¸¦ ÀÌ¿ëÇÏ¸é View ¿¡ µ¥ÀÌÅÍ¸¦ Àü´ÞÇÒ ¼ö ÀÖ´Ù.
+	ViewData ë¥¼ ì´ìš©í•˜ë©´ View ì— ë°ì´í„°ë¥¼ ì „ë‹¬í•  ìˆ˜ ìžˆë‹¤.
 	
 	<%=ViewData["Title"]%>
 	
-	View ¿¡¼­´Â ÀÌ·± ½ÄÀ¸·Î Àü´Þ ¹Þ¾Æ »ç¿ëÇÒ ¼ö ÀÖ´Â °ÍÀÌ°í...
+	View ì—ì„œëŠ” ì´ëŸ° ì‹ìœ¼ë¡œ ì „ë‹¬ ë°›ì•„ ì‚¬ìš©í•  ìˆ˜ ìžˆëŠ” ê²ƒì´ê³ ...
 	
 	---------------------------------------------------------------------
 	
@@ -111,7 +111,7 @@ public string Hello3(int? id, string param)
 		return View(rl);
 	}
 	
-	view ÀÇ »ý¼ºÀÚ¿¡ ½É¾î¼­ ³Ñ±â´Â ¹æ¹ýÀÌ ÀÖ´Ù.
+	view ì˜ ìƒì„±ìžì— ì‹¬ì–´ì„œ ë„˜ê¸°ëŠ” ë°©ë²•ì´ ìžˆë‹¤.
 	
 namespace FirstMVC.Models
 {
@@ -133,19 +133,19 @@ namespace FirstMVC.Models
     }
 }	
 	
-	ÀÌ·±½ÄÀ¸·Î DTO ¸¦ ¸¸µé¾î ÁÖ´Âµ¥ 
-	º¹¼öÀÇ DTO ¸¦ ³Ñ±æ ¼ö ÀÖ´Â °Íµµ °°ÀÌ ¸¸µé¸é À¯¿ëÇÏ°Ô ¾²ÀÎ´Ù.
-	GetList ¸¦ ¸¸µé±â¿¡ ¿ëÀÌÇÏ´Ù´Â °Íµµ ¾Ë¾ÆµÎ¸é ÁÁ°í
+	ì´ëŸ°ì‹ìœ¼ë¡œ DTO ë¥¼ ë§Œë“¤ì–´ ì£¼ëŠ”ë° 
+	ë³µìˆ˜ì˜ DTO ë¥¼ ë„˜ê¸¸ ìˆ˜ ìžˆëŠ” ê²ƒë„ ê°™ì´ ë§Œë“¤ë©´ ìœ ìš©í•˜ê²Œ ì“°ì¸ë‹¤.
+	GetList ë¥¼ ë§Œë“¤ê¸°ì— ìš©ì´í•˜ë‹¤ëŠ” ê²ƒë„ ì•Œì•„ë‘ë©´ ì¢‹ê³ 
 	
 	
-	±×·¯¸é ¾Æ·¡ÀÇ View ¿¡¼­´Â
+	ê·¸ëŸ¬ë©´ ì•„ëž˜ì˜ View ì—ì„œëŠ”
 	Inherits="System.Web.Mvc.ViewPage<FirstMVC.Models.TempDTOs>"
-	¿Í °°Àº ÇüÅÂ·Î ¸Å°³º¯¼ö¸¦ ViewPage ¿¡¼­ ÁöÁ¤ÇØ ÁÖ°Ô µÇ¸é
+	ì™€ ê°™ì€ í˜•íƒœë¡œ ë§¤ê°œë³€ìˆ˜ë¥¼ ViewPage ì—ì„œ ì§€ì •í•´ ì£¼ê²Œ ë˜ë©´
 	
-	Model ÀÌ¶ó´Â º¯¼ö°¡ View(rl) ÀÇ »ý¼ºÀÚÀÇ ¸Å°³º¯¼ö¸¦ ¹Þ¾ÆµéÀÌ°Ô µÇ°í
-	±× List ¶ó´Â Property ¸¦ »ç¿ëÇØ¼­ ³Ñ¾î¿Â °ÍÀ» Ãâ·Â ÇÒ ¼ö ÀÖ°Ô µÈ´Ù.
+	Model ì´ë¼ëŠ” ë³€ìˆ˜ê°€ View(rl) ì˜ ìƒì„±ìžì˜ ë§¤ê°œë³€ìˆ˜ë¥¼ ë°›ì•„ë“¤ì´ê²Œ ë˜ê³ 
+	ê·¸ List ë¼ëŠ” Property ë¥¼ ì‚¬ìš©í•´ì„œ ë„˜ì–´ì˜¨ ê²ƒì„ ì¶œë ¥ í•  ìˆ˜ ìžˆê²Œ ëœë‹¤.
 	
-	°¡Àå °­·ÂÇÑ ¹æ¹ýÀÌ¶ó°í ÀÌ¾ß±â ÇÏ´Â ¹æ¹ýÀÌ µÈ´Ù.
+	ê°€ìž¥ ê°•ë ¥í•œ ë°©ë²•ì´ë¼ê³  ì´ì•¼ê¸° í•˜ëŠ” ë°©ë²•ì´ ëœë‹¤.
 	
 	
 <%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" 
@@ -169,7 +169,7 @@ namespace FirstMVC.Models
 	
 	 <%=Html.ActionLink("Apple", "Banana", { id = 10101, data = "orange" })%>
 	 
-	 À§ÀÇ ÇÔ¼ö·Î ¸µÅ©¸¦ °É¾îÁÖ´Â °ÍÀ» ´ë½ÅÇÑ´Ù.
+	 ìœ„ì˜ í•¨ìˆ˜ë¡œ ë§í¬ë¥¼ ê±¸ì–´ì£¼ëŠ” ê²ƒì„ ëŒ€ì‹ í•œë‹¤.
 	 
 	 <a href="/Test/Banana/10101?data=orange">Apple</a>
 	 
