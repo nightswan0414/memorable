@@ -1,0 +1,179 @@
+http://localhost:51223/Home/Index
+
+Home 	: HomeController 를 의미
+Index 	: Index 함수를 의미
+
+----------------------------------------------------
+
+public string Hello()
+{
+	return "Hello HomeController::Hello";
+}
+
+이 함수를 HelloController 에 추가하게 되면
+문자열이 Response 로 리턴되게 된다.
+
+----------------------------------------------------
+http://localhost:51223/Home/Hello3/10102
+
+public string Hello2(int? id)
+{
+	if (id == null)
+	{
+		return "Hello HomeController::Hello2 : null parameter";
+	}
+	return "Hello HomeController::Hello2 " + id;
+}
+
+----------------------------------------------------
+		
+http://localhost:51223/Home/Hello3/10102?param=apple
+
+id 는 URL 에 추가하고
+그 이외의 매개변수는 QuertyString 형태로 주는데
+이것을 매개변수 이름에 키 값을 똑 같이 준다.
+
+public string Hello3(int? id, string param)
+{
+	string result = "Hello HomeController::Hello3 : ";
+	if (id == null) {
+		result = result + "id = null ";
+	}
+	else {
+		result = result + "id = " + id;
+	}
+
+	if (param == null)
+	{
+		result = result + "param = null ";
+	}
+	else
+	{
+		result = result + "param = " + param;
+	}
+	
+	//	쿠키 빼가는 걸 방지하기 위해 태그값을 바꿔 준다.
+	return HttpUtility.HtmlEncode(result);
+}
+
+
+
+    public class Test2Controller : Controller
+    {
+        public ActionResult TestView()
+        {
+            return View();
+        }
+    }
+ 
+	TestView 함수에 마우스 가져다 대고 AddView 해 준다.
+	그러면 Views 아래 Test2 폴더에 TestView 파일이 생긴다.
+	
+	즉 하나의 함수에 해당하는 View 가 이름을 가지고 찾아서 호출된다.
+	Spring 같은 경우에는 내가 이름을 지정하는데 여기는 이름을 함부로 못 붙인다.
+	이게 장점이 될 수 있다.
+	
+	
+<%@ Page Title="" Language="C#" 
+	MasterPageFile="~/Views/Shared/Site.Master" 
+	Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
+	TestView
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <h2>TestView</h2>
+</asp:Content>
+	
+	
+	public ActionResult TestView()
+	{
+		ViewData["Title"] = "This Data FROM ViewBag";
+		return View();
+	}
+	
+	ViewData 를 이용하면 View 에 데이터를 전달할 수 있다.
+	
+	<%=ViewData["Title"]%>
+	
+	View 에서는 이런 식으로 전달 받아 사용할 수 있는 것이고...
+	
+	---------------------------------------------------------------------
+	
+	public ActionResult TestView2()
+	{
+		TempDTOs rl = new TempDTOs();
+		rl.Add(new TempDTO() { Id = 10101, data = "apple"});
+		rl.Add(new TempDTO() { Id = 10102, data = "banana" });
+		rl.Add(new TempDTO() { Id = 10103, data = "orange" });
+		rl.Add(new TempDTO() { Id = 10104, data = "kiwi" });
+		return View(rl);
+	}
+	
+	view 의 생성자에 심어서 넘기는 방법이 있다.
+	
+namespace FirstMVC.Models
+{
+    public class TempDTO
+    {
+        public int Id { get; set; }
+        public string data { get; set; }
+    }
+
+    public class TempDTOs
+    {
+        private List<TempDTO> ItemList = new List<TempDTO>();
+
+        public void Add(TempDTO i) {
+            ItemList.Add(i);
+        }
+
+        public List<TempDTO> List { get { return ItemList;  } }
+    }
+}	
+	
+	이런식으로 DTO 를 만들어 주는데 
+	복수의 DTO 를 넘길 수 있는 것도 같이 만들면 유용하게 쓰인다.
+	GetList 를 만들기에 용이하다는 것도 알아두면 좋고
+	
+	
+	그러면 아래의 View 에서는
+	Inherits="System.Web.Mvc.ViewPage<FirstMVC.Models.TempDTOs>"
+	와 같은 형태로 매개변수를 ViewPage 에서 지정해 주게 되면
+	
+	Model 이라는 변수가 View(rl) 의 생성자의 매개변수를 받아들이게 되고
+	그 List 라는 Property 를 사용해서 넘어온 것을 출력 할 수 있게 된다.
+	
+	가장 강력한 방법이라고 이야기 하는 방법이 된다.
+	
+	
+<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" 
+    Inherits="System.Web.Mvc.ViewPage<FirstMVC.Models.TempDTOs>" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
+	TestView2
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <h2>TestView2</h2>
+    <%
+        foreach (var i in Model.List) { 
+            %><%=i.Id%>
+            <%=i.data%><%
+        }
+    %>
+</asp:Content>
+	
+	-----------------------------------------------------------------------------
+	
+	 <%=Html.ActionLink("Apple", "Banana", { id = 10101, data = "orange" })%>
+	 
+	 위의 함수로 링크를 걸어주는 것을 대신한다.
+	 
+	 <a href="/Test/Banana/10101?data=orange">Apple</a>
+	 
+	 http://localhost:51223/Test2/Banana/10101?data=orange
+	
+	
+	
