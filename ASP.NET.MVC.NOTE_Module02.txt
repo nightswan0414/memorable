@@ -1,1 +1,380 @@
 ASP.NET.MVC.NOTE_Module02.txt
+
+2. ASP.NET MVC
+
+
+2.1
+
+    public class Study02Controller : Controller
+    {
+        public ActionResult Test01()
+        {
+            return View();
+        }
+    }
+
+	뷰 없이 컨트롤러만 만들어 주면 에러가 난다.
+	함수에 대고 마우스 오른쪽을 눌러주면 View 가 생성되고 View 로 뛴다.
+	
+<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
+	Test01
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <h2>Test01</h2>
+</asp:Content>
+	
+	
+2.2
+
+        public ActionResult Test02(int id)
+        {
+            if (id % 2 == 0)
+            {
+                return View("Test02_EVEN");
+            }
+            else 
+            {
+                return View("Test02_ODD");
+            }
+        }
+
+		하나의 컨트롤러에 여러개의 View 를 만들 수 있다.
+		위의 경우에는 Test02_EVEN.aspx , Test02_ODD.aspx 를 의미한다.
+		
+		
+2.3
+
+        public ActionResult Test03()
+        {
+			//	ViewBag 은 MVC3 이후에서나 사용이 가능하다고 한다.
+            ViewBag.Apple = "사과";
+            return View();
+        }
+
+		
+        public ActionResult Test03()
+        {
+            //	ViewBag 은 MVC3 이후에서 사용이 가능하다고 한다.
+            //  ViewBag.Apple = "사과";
+            ViewData["Apple"] = "사과";
+            
+            List<string> l = new List<string>();
+            l.Add("Apple");
+            l.Add("Banana");
+            l.Add("Orange");
+            l.Add("Kiwi");
+            ViewData["Fruits"] = l;
+
+            return View();
+        }
+		
+		ViewData 는 딕셔너리라서 이것을 끄집어 내서 사용할때는 적절한 캐스팅이 필요
+		
+		<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+			<%=ViewData["Apple"]%>
+			<%
+			List<string> ls = (List<string>)ViewData["Fruits"];
+			foreach( string i in ls ) {
+				%><%=i%><br /><%
+			}    
+			%>
+			<h2>Test03</h2>
+		</asp:Content>
+		
+		캐스팅을 안하고 쓸 수 있는 것이 ViewBag 이다. 이게 더 편하다.
+		
+2.3
+
+	Models 폴더에 마우스를 대고 아래의 클래스를 생성한다.
+	
+   public class Fruit
+    {
+        public Fruit(string p)
+        {
+            this.Name = p;
+        }
+        public Fruit() { }
+
+        public string Name { get; set; }
+    }
+
+    public class Fruits 
+    {
+        private List<Fruit> List = new List<Fruit>();
+
+        public void Add(Fruit i) {
+            List.Add(i);
+        }
+
+        public List<Fruit> Items { get { return this.List; } }
+    }
+	
+	
+	보통 Fruit 같은 클래스는 OR Mapping 개념으로 테이블명과 같게 만들고
+	뒤에 DTO 또는 VO 같은 접미어를 붙였는데, 여기서는 그냥 같게 만드는 분위기다.
+	그래야 나중에 Hibarnate 같은 개념으로 곧바로 테이블을 이용할 수 있게 한다.
+	
+	public ActionResult Test05()
+	{
+
+		Fruits fs = new Fruits();
+		fs.Add(new Fruit("Apple"));
+		fs.Add(new Fruit("Banana"));
+		fs.Add(new Fruit() { name = "Orange"});
+		fs.Add(new Fruit() { name = "Kiwi"});
+
+		return View(fs);
+	}
+
+	이럴바에야 
+	
+	public ActionResult Test04()
+	{
+		List<string> fruits = new List<string>();
+		fruits.Add("Apple");
+		fruits.Add("Banana");
+		fruits.Add("Orange");
+		fruits.Add("Kiwi");
+
+		return View(fruits);
+	}
+	
+	이게 더 나을수도 있다고 생각할 수 있다.
+	헌데 이 방법은 이상하게도 View 생성할때 다이얼로그에 선택사항이 없다.
+	
+	아래의 내용이 View 인데 여기에서 Inherits="System.Web.Mvc.ViewPage<List<string>>" 에 주목
+	이 부분을 View(fruits) 와 형태를 맞추어 주면 된다.
+	지금은 List<string> 을 보냈으니 System.Web.Mvc.ViewPage<List<string>> 으로 지정한다.
+	
+<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" 
+    Inherits="System.Web.Mvc.ViewPage<List<string>>" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
+	Test04
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+
+    <h2>Test04</h2><br />
+    <%
+        foreach (string i in Model) { 
+            %><%=i%><br /><%
+        }    
+    %>
+</asp:Content>
+	
+	
+	1.5
+
+	public ActionResult Test05()
+	{
+
+		Fruits fs = new Fruits();
+		fs.Add(new Fruit("Apple"));
+		fs.Add(new Fruit("Banana"));
+		fs.Add(new Fruit() { Name = "Orange"});
+		fs.Add(new Fruit() { Name = "Kiwi"});
+
+		return View(fs);
+	}
+
+	이 코드를 쓰게 되고 View 를 Add 할때
+	strongly typed view 를 선택 가능하다는 이야기를 한다.
+	거기에서 Fruits 를 선택 해 주면
+	
+<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" 
+    Inherits="System.Web.Mvc.ViewPage<StudyMVC01.Models.Fruits>" %>
+
+	의 모양을 가지는 View 가 생성이 된다.
+	그러면 Model 변수는 곧바로 Fruits 타입으로 넘겨 받는 형태가 된다.
+	
+	
+<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" 
+    Inherits="System.Web.Mvc.ViewPage<StudyMVC01.Models.Fruits>" %>
+<%@ Import Namespace="StudyMVC01.Models" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
+	Test05
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+
+    <h2>Test05</h2>
+    <%
+        foreach (Fruit i in Model.Items) { 
+            %><%=i.Name%><br /><%
+        }
+    %>
+</asp:Content>
+	
+	이런 코드가 가능해진다.
+	
+...............................................................................	
+	
+ActionResult 로 부터 상속받은 클래스들은 아래와 같다.
+
+	ContentResult		사용자 정의된 ContentType을 반환합니다.
+	EmptyResult			아무 일도 하지 않는다는 뜻입니다.
+	FileResult			파일을 반환합니다.
+	HttpStatusCodeResult	Http 상태 코드를 반환합니다.
+	JavaScriptResult		JavaScript를 반환합니다.
+	JsonResult				Json 형식으로 된 데이터를 반환합니다.
+	RedirectResult			URI를 입력해 줌으로써 Redirect해 줍니다.
+	RedirectToRouteResult	RouteValueDictionary를 사용해서 Redirect해 줍니다.
+	ViewResultBase			ViewResult 관련된 것들이 있습니다.
+	
+	
+각각의 ActionResult에 대하여 적절한 함수들이 Controller Class에 정의되어 있습니다.
+ 
+ContentResult		: Content, EmptyResult
+FileResult			: File, HttpStatusCodeResult
+JavaScriptResult	: JavaScript
+JsonResult			: Json
+RedirectResult		: Redirect, RedirectToRouteResult, RedirectToAction, RedirectToRoute
+ViewResultBase		: PartialView, View
+
+
+View 함수는 이렇게 아무 것도 없는 경우도 있지만, 다음과 같이 여덟 가지 경우가 존재합니다.
+ 
+ViewResult View()
+ViewResult View(Object model)
+ViewResult View(string viewName)
+ViewResult View(IView view)
+ViewResult View(string viewName, Object model)
+
+이 아래의 3가지는 정말 어떻게 쓰는건지 잘 모르겠다 알고 싶지도 않고...
+
+ViewResult View(IView view, Object model)
+ViewResult View(string viewName, string masterName, Object model)
+ViewResult View(string viewName, string masterName)
+
+...............................................................................
+
+2.6
+
+        public ActionResult Test06()
+        {
+            return RedirectToAction("Test01", "Study02");
+        }
+
+		이렇게 코딩하면 
+		
+		http://localhost:49809/Study02/Test01
+		
+		으로 리다이렉트로 넘어가게 된다.
+		
+2.7
+
+        public ActionResult Test07()
+        {
+            return RedirectToRoute(new { action = "/Test01", id = 10101, name = "wolfgang" });
+        }
+
+        http://localhost:49809/Study02/Test01/10101?name=wolfgang 과 같이 요청하게 된다.
+		
+2.8
+
+       public ActionResult Test08()
+        {
+            object obj = new { name = "wolfgang", age = 100 };
+
+            JsonResult jr = Json(obj, JsonRequestBehavior.AllowGet );
+            return jr;
+        }
+
+		위와 같은 컨트롤러에서 아래의 응답을 만든다.
+		JsonRequestBehavior.AllowGet 은 GET 방식의 요청에서도 동작하게 하기 위해 설정한다.
+		
+		{"name":"wolfgang","age":100}
+
+		이거 나름 엄청 좋네...
+		
+2.9
+
+        public ActionResult Test09()
+        {
+            FileResult fr = File(@"D:\vs1680.pdf","application/pdf");
+            return fr;
+        }
+
+		이걸 요청하면 PDF 파일이 나타난다.
+
+2.10
+
+        public ActionResult Test10()
+        {
+            byte[] Content = System.IO.File.ReadAllBytes(@"D:\vs1680.pdf");
+            string fileName = "vs1680.pdf";
+            return File(Content, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+        }
+
+		파일을 다운로드 하는 코드이다.
+		나름 MIME 타입을 지정하고 해당 fileName 에 있는 값으로 다운 시킨다.
+		
+2.11
+
+        public ActionResult Test11()
+        {
+            return Redirect("http://daum.net");
+        }
+
+		같은 Controller 안에 없는 곳으로 넘어가게 되는 경우에는 이걸 쓴다.
+
+2.12
+
+        public ActionResult Test12()
+        {
+            ContentResult cr = Content("HelloWorld", 
+				System.Net.Mime.MediaTypeNames.Text.Plain);
+            return cr;
+        }
+
+		이건 일반 string 을 넘길때다.
+		리턴 타입으로 string 을 쓰는 경우와 마찬가지다.
+		
+2.13
+
+        public ActionResult Test13()
+        {
+            return new EmptyResult();
+        }
+
+		아무런 결과도 만들어 내지 않는다.  return null 의 경우와 같다.
+
+
+
+
+
+
+
+
+
+
+
+<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
+	Test01
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+  <h2>Test01</h2>
+</asp:Content>
+
+...............................................................................
+
+Add > New Item > MasterPage
+해서 만들어주고 그 안에 ContentPlaceHolder 를 만들어 준다.
+
+그렇게 하고 나서 
+Add > New Item > Web Form Using Master Page 를 이용해서 생성하면
+해당 Master 페이지를 이용하는 aspx 파일이 생성된다.
+
+이렇게 만들면 편한것이
+일정한 포맷을 가지고 있는 배경을 가지고 작업하면서
+두개가 결합된 결과 ( 빵꾸 채워넣기 ) 형태를 쓰는데
+
+껍대기가 아닌 알맹이 파일을 요청하게 된다.

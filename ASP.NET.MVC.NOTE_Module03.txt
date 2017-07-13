@@ -1,0 +1,92 @@
+ASP.NET.MVC.NOTE_Module03.txt
+
+3. 여기서는 필터의 사용법을 주로 다룬다.
+
+    public class Study03Controller : Controller
+    {
+        [DateActionFilter]
+        public ActionResult Test01()
+        {
+            return View();
+        }
+    }
+	
+	DateActionFilter 가 없어서 빨간줄 그어진다.
+	Model 디렉토리에 아래 코드를 넣었는데 크게 상관은 없는 것 같다.
+	어디에 만들건 간에 클래스를 만드는게 중요하다.
+	
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Diagnostics;
+using System.Web.Mvc;
+
+namespace StudyMVC01.Models
+{
+    public class DateActionFilter : ActionFilterAttribute
+    {
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            Debug.WriteLine(DateTime.Now.ToLongTimeString());
+            Debug.WriteLine(this.GetHashCode());
+
+            base.OnActionExecuting(filterContext);
+        }
+    }
+}
+	
+해당 컨트롤러를 요청하면 필터도 잘 동작한다.
+해시코드를 살펴보면 동일한 해시코드가 유지되는 것을 볼 수 있고
+이것은 멤버변수의 사용에 유의해야 한다는 얘기가 된다.
+
+
+    [DateActionFilter]
+    public class Study03Controller : Controller
+    {
+        public ActionResult Test01()
+        {
+            return Content("HelloWorld");
+        }
+    }
+	
+	이렇게 컨트롤러에 액션 필터를 걸어 보았다.
+	이 경우 컨트롤러에 소속된 모든 액션 메소드에 대해 필터가 동작한다.
+	
+	
+3.2
+
+        [GlobalExceptionFilter]
+        public ActionResult Test02(int? id)
+        {
+            if (id == null) {
+                throw new Exception();
+            }
+            return Content("HelloWorld");
+        }
+
+		이렇게 만들어 주면
+		
+    public class GlobalExceptionFilter : IExceptionFilter, FilterAttribute
+    {
+        public override void OnException(ExceptionContext filterContext)
+        {
+            if (filterContext.ExceptionHandled) {
+                return;
+            }
+
+            filterContext.Controller.TempData["exception"] = filterContext.Exception;
+            filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(
+                    new { controller="Exception", action="HandleError"}
+                ));
+            Debug.WriteLine(filterContext.Exception.ToString());
+
+            filterContext.ExceptionHandled = true;
+            filterContext.HttpContext.Response.Clear();
+        }
+    }
+	
+	FilterAttribute 를 상속받아 필터를 만든다.
+
+		
+	
